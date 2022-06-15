@@ -10,10 +10,12 @@ public class EnemyIA : MonoBehaviour
     public Animator animator;
     public Quaternion angulo;
     public float grado;
+    private Vector3 vector;
 
     // Start is called before the first frame update
     void Start()
     {
+        vector = new Vector3(0.1f, 0, 0);
         animator = GetComponent<Animator>();
     }
 
@@ -25,14 +27,12 @@ public class EnemyIA : MonoBehaviour
 
     public void ComportamientoEnemigo()
     {
-        cronometro += 1 * Time.deltaTime;
-        if (cronometro >= 4)
-        {
-            rutina = Random.Range(0, 2);
+        cronometro += Random.Range(-2, 2)* 100 * Time.deltaTime;
+        rutina = (int)cronometro;
+        if (cronometro >= 4 || cronometro < 0)
             cronometro = 0;
-        }
-
-        switch (cronometro)
+        Debug.Log(Time.deltaTime);
+        switch (rutina)
         {
             // Stop enemy
             case 0:
@@ -41,16 +41,14 @@ public class EnemyIA : MonoBehaviour
 
             // Direction enemy
             case 1:
-                grado = Random.Range(0, 360);
+                grado = Random.Range(-360, 360);
                 angulo = Quaternion.Euler(0, grado, 0);
-                
-                rutina++;
                 break;
 
             // Walk enemy
-            case 2:
+            default:
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 0.5f);
-                transform.Translate(Vector3.forward * 1 * Time.deltaTime);
+                transform.Translate(vector * 2 * Time.deltaTime);
                 animator.SetBool("walk", true);
                 break;
         }
