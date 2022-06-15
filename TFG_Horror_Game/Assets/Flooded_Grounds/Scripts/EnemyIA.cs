@@ -11,6 +11,7 @@ public class EnemyIA : MonoBehaviour
     public Quaternion angulo;
     public float grado;
     private Vector3 vector;
+    private int i;
 
     // Start is called before the first frame update
     void Start()
@@ -32,16 +33,23 @@ public class EnemyIA : MonoBehaviour
 
     public void GiroEnemigo()
     {
-        int i;
+        float anguloMax;
 
-        i = 1;
-        Debug.Log(grado);
-        if (grado < 0)
+        anguloMax = 45;
+        if (grado < 0 && i != 0)
+        {
+            anguloMax *= -1;
             i *= -1;
-        i++;
+            i--;
+        }
+        else if(i != 0)
+            i++;
         angulo = Quaternion.Euler(0, i, 0);
-        if (i != grado)
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 45);
+        Debug.Log(grado);
+        if (i != grado && i != 0)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, anguloMax);
+        else
+            i = 0;
     }
 
     public void ComportamientoEnemigo()
@@ -65,14 +73,16 @@ public class EnemyIA : MonoBehaviour
 
             // Direction enemy
             case 1:
-                grado = Random.Range(-45, 45);
+                i = 1;
+                animator.SetBool("walk", false);
+                grado = Random.Range(0, 45);
                 InvokeRepeating("GiroEnemigo", 0, 0.01f);
                 break;
 
             // Walk enemy
             default:
-                InvokeRepeating("AvanceEnemigo", 0, 0.01f);
                 animator.SetBool("walk", true);
+                InvokeRepeating("AvanceEnemigo", 0, 0.01f);
                 break;
         }
     }
