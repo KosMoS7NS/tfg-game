@@ -27,7 +27,21 @@ public class EnemyIA : MonoBehaviour
 
     public void AvanceEnemigo()
     {
-        transform.Translate(vector * 10 * Time.deltaTime);
+        transform.Translate(vector * 1 * Time.deltaTime);
+    }
+
+    public void GiroEnemigo()
+    {
+        int i;
+
+        i = 1;
+        Debug.Log(grado);
+        if (grado < 0)
+            i *= -1;
+        i++;
+        angulo = Quaternion.Euler(0, i, 0);
+        if (i != grado)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 45);
     }
 
     public void ComportamientoEnemigo()
@@ -35,9 +49,10 @@ public class EnemyIA : MonoBehaviour
         try
         {
             CancelInvoke("AvanceEnemigo");
+            CancelInvoke("GiroEnemigo");
         }
         catch { }
-        cronometro += Random.Range(-2, 2)* 100 * Time.deltaTime;
+        cronometro += Random.Range(-2, 2) * 100 * Time.deltaTime;
         rutina = (int)cronometro;
         if (cronometro >= 4 || cronometro < 0)
             cronometro = 0;
@@ -50,14 +65,13 @@ public class EnemyIA : MonoBehaviour
 
             // Direction enemy
             case 1:
-                grado = Random.Range(-360, 360);
-                angulo = Quaternion.Euler(0, grado, 0);
+                grado = Random.Range(-45, 45);
+                InvokeRepeating("GiroEnemigo", 0, 0.01f);
                 break;
 
             // Walk enemy
             default:
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 0.5f);
-                InvokeRepeating("AvanceEnemigo", 0, 0);
+                InvokeRepeating("AvanceEnemigo", 0, 0.01f);
                 animator.SetBool("walk", true);
                 break;
         }
