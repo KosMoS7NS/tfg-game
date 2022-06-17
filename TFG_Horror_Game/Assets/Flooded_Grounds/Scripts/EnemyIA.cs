@@ -18,22 +18,23 @@ public class EnemyIA : MonoBehaviour
     float anguloMax;
     
     public Transform Player;
-    int MoveSpeed = 4;
-    int MaxDist = 15;
-    int MinDist = 10;
+    float MoveSpeed = 0.05f;
+    float MaxDist = 15.0f;
+    float MinDist = 10.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        vector = new Vector3(-0.3f, 0, 0);
+        vector = new Vector3(0.3f, 0, 0);
         animator = GetComponent<Animator>();
-        //InvokeRepeating("ComportamientoEnemigo", 1, 3);
+        InvokeRepeating("ComportamientoEnemigo", 1, 3);
     }
 
     // Update is called once per frame
     void Update()
     {
-        ComportamientoEnemigo();
+        if (Vector3.Distance(transform.position, Player.transform.position) <= MinDist && Vector3.Distance(transform.position, Player.transform.position) > 5)
+            SeguimientoEnemigo();
     }
 
     public void AvanceEnemigo()
@@ -64,6 +65,15 @@ public class EnemyIA : MonoBehaviour
         
         else
             i = 0;
+    }
+
+    public void SeguimientoEnemigo() {
+        animator.SetBool("walk", false);
+        animator.SetBool("run", true);
+
+        transform.LookAt(Player);
+        transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed);
+
     }
 
     public void ComportamientoEnemigo()
@@ -111,45 +121,11 @@ public class EnemyIA : MonoBehaviour
             }
 
         }
-        else if (Vector3.Distance(transform.position, Player.transform.position) <= MinDist && Vector3.Distance(transform.position, Player.transform.position) > 0)
-        {
-            animator.SetBool("walk", false);
-
-            targetPoint = new Vector3(Player.transform.position.x, transform.position.y, Player.transform.position.z) - transform.position;
-            targetRotation = Quaternion.LookRotation(targetPoint);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2.0f);
-
-            //animator.SetBool("run", true);
-            
-            //transform.LookAt(Player);
-            //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-
-        }
-        else { 
+        else 
+        { 
             // Attack
         
         }
-        
-           
-
-            /*
-            // Nuestra posición que se utilizará como rotación del enemnigo
-            var lookPos = target.transform.position;
-            lookPos.y = 0;
-
-            // Rotación del enemigo al ser detectado
-            var rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, 360);
-
-            Debug.Log(lookPos);
-
-            animator.SetBool("walk", false);
-            animator.SetBool("run", true);
-
-            // Dirección del enemigo
-            transform.Translate(vector * 2 * Time.deltaTime);
-            */
-        
         
     }
 }
