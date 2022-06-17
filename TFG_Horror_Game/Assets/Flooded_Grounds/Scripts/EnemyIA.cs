@@ -9,19 +9,24 @@ public class EnemyIA : MonoBehaviour
     public float cronometro;
     public Animator animator;
     public Quaternion angulo;
+    
     public float grado;
     private Vector3 vector;
+    private Vector3 targetPoint;
+    private Quaternion targetRotation;
     private int i;
-    public GameObject target;
     float anguloMax;
+    
+    public Transform Player;
+    int MoveSpeed = 4;
+    int MaxDist = 15;
+    int MinDist = 10;
 
     // Start is called before the first frame update
     void Start()
     {
         vector = new Vector3(-0.3f, 0, 0);
         animator = GetComponent<Animator>();
-
-        target = GameObject.Find("FpsController");
         //InvokeRepeating("ComportamientoEnemigo", 1, 3);
     }
 
@@ -64,7 +69,7 @@ public class EnemyIA : MonoBehaviour
     public void ComportamientoEnemigo()
     {
         // Condicional de detección de metros (5 metros de distancia)
-        if(Vector3.Distance(transform.position, target.transform.position) > 5)
+        if (Vector3.Distance(transform.position, Player.transform.position) >= MaxDist)
         {
             animator.SetBool("run", false);
             try
@@ -72,7 +77,7 @@ public class EnemyIA : MonoBehaviour
                 CancelInvoke("AvanceEnemigo");
                 CancelInvoke("GiroEnemigo");
             }
-            catch 
+            catch
             {
                 Debug.Log("Los métodos AvanceEnemigo y GiroEnemigo no están activos");
             }
@@ -105,9 +110,29 @@ public class EnemyIA : MonoBehaviour
                     break;
             }
 
-        } 
-        else
+        }
+        else if (Vector3.Distance(transform.position, Player.transform.position) <= MinDist && Vector3.Distance(transform.position, Player.transform.position) > 0)
         {
+            animator.SetBool("walk", false);
+
+            targetPoint = new Vector3(Player.transform.position.x, transform.position.y, Player.transform.position.z) - transform.position;
+            targetRotation = Quaternion.LookRotation(targetPoint);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2.0f);
+
+            //animator.SetBool("run", true);
+            
+            //transform.LookAt(Player);
+            //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+
+        }
+        else { 
+            // Attack
+        
+        }
+        
+           
+
+            /*
             // Nuestra posición que se utilizará como rotación del enemnigo
             var lookPos = target.transform.position;
             lookPos.y = 0;
@@ -123,7 +148,8 @@ public class EnemyIA : MonoBehaviour
 
             // Dirección del enemigo
             transform.Translate(vector * 2 * Time.deltaTime);
-        }
+            */
+        
         
     }
 }
