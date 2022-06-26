@@ -7,12 +7,13 @@ public class CharController_Motor : MonoBehaviour {
 	public float speed = 10.0f;
 	public float sensitivity = 30.0f;
 	public float WaterHeight = 15.5f;
+	public float gravity = -9.8f;
 	CharacterController character;
 	public GameObject cam;
 	float moveFB, moveLR;
 	float rotX, rotY;
 	public bool webGLRightClickRotation = true;
-	float gravity = -9.8f;
+	bool cd;
 
 
 	void Start(){
@@ -22,6 +23,7 @@ public class CharController_Motor : MonoBehaviour {
 			webGLRightClickRotation = false;
 			sensitivity = sensitivity * 1.5f;
 		}
+		InvokeRepeating("RefreshJumpCD", 0, 2);
 	}
 
 
@@ -34,8 +36,25 @@ public class CharController_Motor : MonoBehaviour {
 	}
 
 
+	void RefreshJumpCD()
+    {
+		cd = true;
+    }
+
 
 	void Update(){
+		if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+			speed = 4;
+			character.transform.localScale = new Vector3(1, 0.4f, 1);
+        }
+
+		if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+			speed = 10;
+			character.transform.localScale = new Vector3(1, 1, 1);
+		}
+
 		moveFB = Input.GetAxis ("Horizontal") * speed;
 		moveLR = Input.GetAxis ("Vertical") * speed;
 
@@ -45,8 +64,14 @@ public class CharController_Motor : MonoBehaviour {
 		//rotX = Input.GetKey (KeyCode.Joystick1Button4);
 		//rotY = Input.GetKey (KeyCode.Joystick1Button5);
 
-		CheckForWaterHeight ();
+		CheckForWaterHeight();
 
+		if (Input.GetKeyDown(KeyCode.Space) && cd == true)
+		{
+			//character.GetComponent<Rigidbody>().AddForce(new Vector3(0, 5000, 0));
+			gravity = 50;
+			cd = false;
+		}
 
 		Vector3 movement = new Vector3 (moveFB, gravity, moveLR);
 
@@ -69,8 +94,4 @@ public class CharController_Motor : MonoBehaviour {
 		transform.Rotate (0, rotX * Time.deltaTime, 0);
 		cam.transform.Rotate (-rotY * Time.deltaTime, 0, 0);
 	}
-
-
-
-
 }
