@@ -36,11 +36,8 @@ public class EnemyIA : MonoBehaviour
         if (Vector3.Distance(transform.position, Player.transform.position) <= MinDist && Vector3.Distance(transform.position, Player.transform.position) > 5)
         {
             SeguimientoEnemigo();
-            CancelInvoke("ComportamientoEnemigo");
-        }
-
-        else
-            InvokeRepeating("ComportamientoEnemigo", 1, 3);      
+            //CancelInvoke("ComportamientoEnemigo");
+        }     
     }
 
     public void AvanceEnemigo()
