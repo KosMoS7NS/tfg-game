@@ -22,10 +22,13 @@ public class EnemyIA : MonoBehaviour
     float MaxDist = 15.0f;
     float MinDist = 10.0f;
 
+    bool nearPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
-        vector = new Vector3(0.3f, 0, 0);
+        nearPlayer = false;
+        vector = new Vector3(0, 0, 0.3f);
         animator = GetComponent<Animator>();
         InvokeRepeating("ComportamientoEnemigo", 1, 3);
     }
@@ -36,8 +39,18 @@ public class EnemyIA : MonoBehaviour
         if (Vector3.Distance(transform.position, Player.transform.position) <= MinDist && Vector3.Distance(transform.position, Player.transform.position) > 5)
         {
             SeguimientoEnemigo();
-            //CancelInvoke("ComportamientoEnemigo");
-        }     
+            CancelInvoke("ComportamientoEnemigo");
+            nearPlayer = true;
+        }
+        
+        else
+        {
+            animator.SetBool("walk", true);
+            animator.SetBool("run", false);
+            if (nearPlayer)
+                InvokeRepeating("ComportamientoEnemigo", 1, 3);
+            nearPlayer = false;
+        }
     }
 
     public void AvanceEnemigo()
@@ -76,59 +89,51 @@ public class EnemyIA : MonoBehaviour
 
         transform.LookAt(Player);
         transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed);
-
     }
 
     public void ComportamientoEnemigo()
     {
         // Condicional de detección de metros (5 metros de distancia)
-        if (Vector3.Distance(transform.position, Player.transform.position) >= MaxDist)
+        /*if (Vector3.Distance(transform.position, Player.transform.position) >= MaxDist)
         {
-            animator.SetBool("run", false);
-            try
-            {
-                CancelInvoke("AvanceEnemigo");
-                CancelInvoke("GiroEnemigo");
-            }
-            catch
-            {
-                Debug.Log("Los métodos AvanceEnemigo y GiroEnemigo no están activos");
-            }
-
-            cronometro += Random.Range(-2, 2) * 100 * Time.deltaTime;
-            rutina = (int)cronometro;
-
-            if (cronometro >= 4 || cronometro < 0)
-                cronometro = 0;
-
-            switch (rutina)
-            {
-                // Stop enemy
-                case 0:
-                    animator.SetBool("walk", false);
-                    break;
-
-                // Direction enemy
-                case 1:
-                    i = 1;
-                    animator.SetBool("walk", false);
-                    grado = Random.Range(0, 45);
-                    InvokeRepeating("GiroEnemigo", 0, 0.01f);
-                    break;
-
-                // Walk enemy
-                default:
-                    animator.SetBool("walk", true);
-                    InvokeRepeating("AvanceEnemigo", 0, 0.01f);
-                    break;
-            }
-
+        animator.SetBool("run", false);*/
+        try
+        {
+            CancelInvoke("AvanceEnemigo");
+            CancelInvoke("GiroEnemigo");
         }
-        else 
-        { 
-            // Attack
-        
+        catch
+        {
+            Debug.Log("Los métodos AvanceEnemigo y GiroEnemigo no están activos");
         }
-        
+
+        cronometro += Random.Range(-2, 2) * 100 * Time.deltaTime;
+        rutina = (int)cronometro;
+
+        if (cronometro >= 4 || cronometro < 0)
+            cronometro = 0;
+
+        switch (rutina)
+        {
+            // Stop enemy
+            case 0:
+                animator.SetBool("walk", false);
+                break;
+
+            // Direction enemy
+            case 1:
+                i = 1;
+                animator.SetBool("walk", false);
+                grado = Random.Range(0, 45);
+                InvokeRepeating("GiroEnemigo", 0, 0.01f);
+                break;
+
+            // Walk enemy
+            default:
+                animator.SetBool("walk", true);
+                InvokeRepeating("AvanceEnemigo", 0, 0.01f);
+                break;
+        }
+
     }
 }

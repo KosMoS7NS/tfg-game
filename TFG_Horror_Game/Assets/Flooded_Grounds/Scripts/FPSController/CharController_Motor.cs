@@ -18,7 +18,7 @@ public class CharController_Motor : MonoBehaviour {
 
 	void Start(){
 		//LockCursor ();
-		character = GetComponent<CharacterController> ();
+		character = GetComponent<CharacterController>();
 		if (Application.isEditor) {
 			webGLRightClickRotation = false;
 			sensitivity = sensitivity * 1.5f;
@@ -45,8 +45,11 @@ public class CharController_Motor : MonoBehaviour {
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.LeftControl))
         {
+			Debug.Log("Pressed");
 			speed = 4;
 			character.transform.localScale = new Vector3(1, 0.4f, 1);
+			// Escalamos al personaje para que parezca agachado pero no la linterna
+			character.transform.GetChild(0).GetChild(2).localScale = new Vector3(1, 1, 1);
         }
 
 		if (Input.GetKeyUp(KeyCode.LeftControl))

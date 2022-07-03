@@ -44,7 +44,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float WaterHeight = 15.5f;
         public float gravity = -9.8f;
         public bool cd;
-        public float speed = 10.0f;
+        public float speed = 5.0f;
 
         public bool resetRotation;
 
@@ -97,14 +97,19 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                speed = 4;
+                //speed = 2;
                 m_CharacterController.transform.localScale = new Vector3(1, 0.4f, 1);
+                // Escalamos al personaje para que parezca agachado pero no la linterna
+                m_CharacterController.transform.GetChild(0).GetChild(2).localScale = new Vector3(1, 1.8f, 2f);
+                m_CharacterController.transform.GetChild(0).GetChild(2).localPosition = new Vector3(0.15f, -0.35f, 0.2f);
             }
 
             if (Input.GetKeyUp(KeyCode.LeftControl))
             {
-                speed = 10;
+                //speed = 5;
                 m_CharacterController.transform.localScale = new Vector3(1, 1, 1);
+                m_CharacterController.transform.GetChild(0).GetChild(2).localScale = new Vector3(1, 1, 1);
+                m_CharacterController.transform.GetChild(0).GetChild(2).localPosition = new Vector3(0.15f, -0.35f, 0.6f);
             }
 
             CheckForWaterHeight();
