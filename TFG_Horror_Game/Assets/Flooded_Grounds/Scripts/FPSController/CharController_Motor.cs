@@ -16,7 +16,8 @@ public class CharController_Motor : MonoBehaviour {
 	bool cd;
 
 
-	void Start(){
+	void Start()
+	{
 		//LockCursor ();
 		character = GetComponent<CharacterController>();
 		if (Application.isEditor) {
@@ -42,7 +43,8 @@ public class CharController_Motor : MonoBehaviour {
     }
 
 
-	void Update(){
+	void Update()
+	{
 		if (Input.GetKeyDown(KeyCode.LeftControl))
         {
 			Debug.Log("Pressed");
