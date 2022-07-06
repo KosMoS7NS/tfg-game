@@ -27,6 +27,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] private GameObject menu;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -119,6 +120,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 //character.GetComponent<Rigidbody>().AddForce(new Vector3(0, 5000, 0));
                 gravity = 50;
                 cd = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                if (!menu.activeSelf)
+                {
+                    menu.SetActive(true);
+                    Cursor.visible = true;
+                }
+
+                else
+                {
+                    menu.SetActive(false);
+                    Cursor.visible = false;
+                }
             }
         }
 
