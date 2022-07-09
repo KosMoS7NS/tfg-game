@@ -72,7 +72,6 @@ public class EnemyIA : MonoBehaviour
             {
                 animator.SetBool("walk", true);
                 animator.SetBool("run", false);
-                animator.SetBool("attack", false);
                 InvokeRepeating("AvanceEnemigo", 0, 0.01f);
                 InvokeRepeating("ComportamientoEnemigo", 1, 3);
                 cc.DeleteText();
