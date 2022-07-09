@@ -26,6 +26,7 @@ public class EnemyIA : MonoBehaviour
     private bool textWarning;
     private bool nearPlayer;
     private bool cdAttack;
+    public bool atacando;
     private CanvasController cc;
 
     // Start is called before the first frame update
@@ -44,7 +45,7 @@ public class EnemyIA : MonoBehaviour
     void Update()
     {
         // Vamos comprobando que esté lejos del jugador. En el momento en que esté cerca le perseguirá
-        if (Vector3.Distance(transform.position, Player.transform.position) <= MaxDist && Vector3.Distance(transform.position, Player.transform.position) > MinDist)
+        if (Vector3.Distance(transform.position, Player.transform.position) <= MaxDist && atacando != true && Vector3.Distance(transform.position, Player.transform.position) > MinDist)
         {
             SeguimientoEnemigo();
             CancelInvoke("ComportamientoEnemigo");
@@ -53,6 +54,11 @@ public class EnemyIA : MonoBehaviour
             // En caso que esté muy cerca del jugador le hará daño, quitándole una vida y activando el cooldown del ataque
             if (Vector3.Distance(transform.position, Player.transform.position) <= RangeAttack && cdAttack)
             {
+                animator.SetBool("walk", false);
+                animator.SetBool("run", false);
+                animator.SetBool("attack", true);
+                
+                atacando = true;
                 cc.Damage();
                 cdAttack = false;
                 Invoke("CoolDownAttack", 2);
@@ -179,5 +185,11 @@ public class EnemyIA : MonoBehaviour
     public void DestroyEnemy()
     {
         Destroy(this.gameObject);
+    }
+
+    // Parar animación de atacar
+    public void StopAtack() {
+        animator.SetBool("attack", false);
+        atacando = false;
     }
 }
