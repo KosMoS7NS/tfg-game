@@ -122,7 +122,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 cd = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!menu.activeSelf)
                 {
