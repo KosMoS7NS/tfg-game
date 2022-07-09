@@ -54,6 +54,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
@@ -125,16 +127,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!menu.activeSelf)
-                {
                     menu.SetActive(true);
-                    Cursor.visible = true;
-                }
-
-                else
-                {
-                    menu.SetActive(false);
-                    Cursor.visible = false;
-                }
             }
         }
 
@@ -207,7 +200,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
 
-            m_MouseLook.UpdateCursorLock();
+            //m_MouseLook.UpdateCursorLock();
         }
 
 
@@ -313,7 +306,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            if (!menu.activeSelf)
+                m_MouseLook.LookRotation (transform, m_Camera.transform);
         }
 
 

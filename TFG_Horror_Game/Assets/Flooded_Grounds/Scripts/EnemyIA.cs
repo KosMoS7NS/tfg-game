@@ -5,6 +5,10 @@ using UnityEngine;
 public class EnemyIA : MonoBehaviour
 
 {
+    private AudioSource m_AudioSource;
+    [SerializeField] private AudioClip[] zombie_sounds;
+    [SerializeField] private AudioClip zombieAttacking;
+
     public int rutina;
     public float cronometro;
     public Animator animator;
@@ -27,12 +31,13 @@ public class EnemyIA : MonoBehaviour
     private bool nearPlayer;
     private bool cdAttack;
     public bool atacando;
-    private CanvasController cc;
+    private CanvasController canvasController;
 
     // Start is called before the first frame update
     void Start()
     {
-        cc = FindObjectOfType<CanvasController>();
+        canvasController = FindObjectOfType<CanvasController>();
+        m_AudioSource = GetComponent<AudioSource>();
         nearPlayer = false;
         textWarning = false;
         cdAttack = true;
@@ -45,7 +50,7 @@ public class EnemyIA : MonoBehaviour
     void Update()
     {
         // Vamos comprobando que esté lejos del jugador. En el momento en que esté cerca le perseguirá
-        if (Vector3.Distance(transform.position, Player.transform.position) <= MaxDist && atacando != true && Vector3.Distance(transform.position, Player.transform.position) > MinDist)
+        if (Vector3.Distance(transform.position, Player.transform.position) <= MaxDist && atacando != true && Vector3.Distance(transform.position, Player.transform.position) > MinDist && canvasController.player.gameObject.activeSelf)
         {
             SeguimientoEnemigo();
             CancelInvoke("ComportamientoEnemigo");
@@ -59,7 +64,7 @@ public class EnemyIA : MonoBehaviour
                 animator.SetBool("attack", true);
                 
                 atacando = true;
-                cc.Damage();
+                canvasController.Damage();
                 cdAttack = false;
                 Invoke("CoolDownAttack", 2);
             }
@@ -74,8 +79,8 @@ public class EnemyIA : MonoBehaviour
                 animator.SetBool("run", false);
                 InvokeRepeating("AvanceEnemigo", 0, 0.01f);
                 InvokeRepeating("ComportamientoEnemigo", 1, 3);
-                cc.DeleteText();
-                cc.setText("You have run away");
+                canvasController.DeleteText();
+                canvasController.setText("You have run away");
             }
             nearPlayer = false;
         }
@@ -113,15 +118,23 @@ public class EnemyIA : MonoBehaviour
 
     // FUnción que regula la persecución al player por parte del monstruo
     public void SeguimientoEnemigo() {
+        // Cambiamos la animación para que el zombie salga corriendo
         animator.SetBool("walk", false);
         animator.SetBool("run", true);
 
+        // Añadimos el sonido del zombie atacando
+        m_AudioSource.clip = zombieAttacking;
+        m_AudioSource.Play();
+
+        // Hacemos que el zombie mire hacia el jugador y se mueva hacia él
         transform.LookAt(Player);
         transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed);
+
+        // Hacemos que aparezca en pantalla un mensaje en rojo avisando de la cercanía del monstruo
         if (!textWarning)
         {
-            cc.setColorText(Color.red);
-            cc.setPermanentText("The monster is near. Run!");
+            canvasController.setColorText(Color.red);
+            canvasController.setPermanentText("The monster is near. Run!");
         }
         textWarning = true;
     }
@@ -133,6 +146,21 @@ public class EnemyIA : MonoBehaviour
         /*if (Vector3.Distance(transform.position, Player.transform.position) >= MaxDist)
         {
         animator.SetBool("run", false);*/
+
+        // Añadimos sonido al zombie de vez en cuando, de manera aleatoria.
+        int soundChance = Random.Range(0, 2);
+        if (soundChance == 1)
+        {
+            // pick & play a random zombie sound from the array,
+            // excluding sound at index 0
+            int n = Random.Range(1, zombie_sounds.Length);
+            m_AudioSource.clip = zombie_sounds[n];
+            m_AudioSource.PlayOneShot(m_AudioSource.clip);
+            // move picked sound to index 0 so it's not picked next time
+            zombie_sounds[n] = zombie_sounds[0];
+            zombie_sounds[0] = m_AudioSource.clip;
+        }
+
         animator.SetBool("walk", false);
         animator.SetBool("run", false);
         textWarning = false;

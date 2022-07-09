@@ -4,16 +4,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class CanvasController : MonoBehaviour
 {
+    [SerializeField] public GameObject player;
+    [SerializeField] public GameObject camara2;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private Image life1;
     [SerializeField] private Image life2;
     [SerializeField] private Image life3;
     [SerializeField] private GameObject blood;
     [SerializeField] private Image gameOver;
-
-    private EnemyIA enemy;
 
     // Función para borrar el texto del canvas y resetear color
     public void DeleteText()
@@ -91,13 +92,13 @@ public class CanvasController : MonoBehaviour
     private void GameOver()
     {
         gameOver.gameObject.SetActive(true);
-        enemy.DestroyEnemy();
+        player.SetActive(false);
+        camara2.SetActive(true);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        enemy = FindObjectOfType<EnemyIA>();
         DeleteText();
         DivineHeal();
         setText("W/A/S/D or Arrow Keys to move");
