@@ -29,13 +29,13 @@ public class FlashLightPick : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player") {
+            m_AudioSource.clip = m_TakeObjSound;
+            m_AudioSource.Play();
             bateryController.AddBatery();
             linterna.SetActive(true);
             inventory.cantidad += 1;
             this.gameObject.SetActive(false);
             bateriesPanel.SetActive(true);
-            m_AudioSource.clip = m_TakeObjSound;
-            m_AudioSource.Play();
             InvokeRepeating("RemoveEnergy", 5, 5);
         }
     }
