@@ -28,6 +28,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
         [SerializeField] private GameObject menu;
+        [SerializeField] private GameObject torchLight;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -105,6 +106,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // Escalamos al personaje para que parezca agachado pero no la linterna
                 m_CharacterController.transform.GetChild(0).GetChild(2).localScale = new Vector3(1, 1.8f, 2f);
                 m_CharacterController.transform.GetChild(0).GetChild(2).localPosition = new Vector3(0.15f, -0.35f, 0.2f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                torchLight.SetActive(!torchLight.activeSelf);
             }
 
             if (Input.GetKeyUp(KeyCode.LeftControl))
