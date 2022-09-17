@@ -27,6 +27,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] private AudioClip m_TakeObjSound;        // the sound played when character takes an object.
         [SerializeField] private GameObject menu;
         [SerializeField] private GameObject torchLight;
 
@@ -49,10 +50,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public float speed = 5.0f;
 
         public bool resetRotation;
+        private BateryController bateryController;
 
         // Use this for initialization
         private void Start()
         {
+            bateryController = FindObjectOfType<BateryController>();
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             Cursor.visible = false;
@@ -108,7 +111,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_CharacterController.transform.GetChild(0).GetChild(2).localPosition = new Vector3(0.15f, -0.35f, 0.2f);
             }
 
-            if (Input.GetKeyDown(KeyCode.V))
+            if (Input.GetKeyDown(KeyCode.V) && bateryController.energy)
             {
                 torchLight.SetActive(!torchLight.activeSelf);
             }
@@ -213,6 +216,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void PlayJumpSound()
         {
             m_AudioSource.clip = m_JumpSound;
+            m_AudioSource.Play();
+        }
+
+        
+        public void PlayTakeObj()
+        {
+            m_AudioSource.clip = m_TakeObjSound;
             m_AudioSource.Play();
         }
 
