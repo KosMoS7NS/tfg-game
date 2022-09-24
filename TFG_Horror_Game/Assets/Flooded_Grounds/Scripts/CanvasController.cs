@@ -15,6 +15,7 @@ public class CanvasController : MonoBehaviour
     [SerializeField] private Image life3;
     [SerializeField] private GameObject blood;
     [SerializeField] private Image gameOver;
+    [SerializeField] private Text notes;
 
     // Función para borrar el texto del canvas y resetear color
     public void DeleteText()
@@ -88,6 +89,11 @@ public class CanvasController : MonoBehaviour
         blood.SetActive(false);
     }
 
+    // Pensamientos de la persona (Notes)
+    public void Notes() {
+        notes.gameObject.SetActive(false);
+    }
+
     // Función para terminar la partida si el jugador muere
     private void GameOver()
     {
@@ -99,6 +105,7 @@ public class CanvasController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InvokeRepeating("Notes", 5.0f, 0.0f);
         DeleteText();
         DivineHeal();
         setText("W/A/S/D or Arrow Keys to move");
