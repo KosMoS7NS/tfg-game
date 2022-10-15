@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GestorEscenas : MonoBehaviour
 {
@@ -21,6 +20,6 @@ public class GestorEscenas : MonoBehaviour
     }
     public void Quit()
     {
-        Application.Quit();
+        Environment.Exit(0);
     }
 }
