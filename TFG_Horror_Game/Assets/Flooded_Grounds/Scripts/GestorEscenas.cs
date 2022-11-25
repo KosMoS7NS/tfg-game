@@ -20,6 +20,6 @@ public class GestorEscenas : MonoBehaviour
     }
     public void Quit()
     {
-        Environment.Exit(0);
+        Application.Quit();
     }
 }
