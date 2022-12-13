@@ -45,11 +45,11 @@ public class FP_Shooting : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKey (KeyCode.Mouse0) && !beingHandled) {
+		if (Input.GetKey (KeyCode.Mouse1) && !beingHandled) {
 			StartCoroutine (Shooting ());
 			
 		}
-		if (Input.GetKey (KeyCode.Mouse1) && !beingHandled) {
+		if (Input.GetKey (KeyCode.Mouse0) && !beingHandled) {
 			StartCoroutine (Shooting_01 ());
 
 		}
